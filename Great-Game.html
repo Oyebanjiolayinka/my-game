@@ -1,0 +1,189 @@
+Oyebanji Olayinka Olakunle, [4/6/2025 2:57 AM]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RGB Color Guessing Game</title>
+  <style>
+    body {
+      background-color: #232323;
+      margin: 0;
+      font-family: "Arial", sans-serif;
+    }
+
+    h1 {
+      background-color: steelblue;
+      color: white;
+      margin: 0;
+      text-align: center;
+      padding: 20px 0;
+      font-weight: normal;
+    }
+
+    #colorDisplay {
+      font-weight: bold;
+    }
+
+    #stripe {
+      background: white;
+      height: 30px;
+      text-align: center;
+      padding: 10px;
+    }
+
+    button {
+      border: none;
+      background: steelblue;
+      color: white;
+      padding: 5px 10px;
+      margin: 0 5px;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+
+    button:hover {
+      background: #4682b4;
+    }
+
+    .selected {
+      background: #4682b4;
+    }
+
+    #container {
+      margin: 20px auto;
+      max-width: 600px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .square {
+      width: 30%;
+      background: purple;
+      padding-bottom: 30%;
+      margin: 1.66%;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <h1>The Great
+    <span id="colorDisplay">RGB</span>
+    Color Game
+  </h1>
+
+  <div id="stripe">
+    <button id="reset">New Colors</button>
+    <span id="message"></span>
+    <button class="mode selected">Easy</button>
+    <button class="mode">Hard</button>
+  </div>
+
+  <div id="container">
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+    <div class="square"></div>
+  </div>
+
+  <script>
+    let numSquares = 6;
+    let colors = [];
+    let pickedColor;
+    const squares = document.querySelectorAll(".square");
+    const colorDisplay = document.getElementById("colorDisplay");
+    const messageDisplay = document.getElementById("message");
+    const h1 = document.querySelector("h1");
+    const resetButton = document.getElementById("reset");
+    const modeButtons = document.querySelectorAll(".mode");
+
+    init();
+
+    function init() {
+      setupModeButtons();
+      setupSquares();
+      reset();
+    }
+
+    function setupModeButtons() {
+      modeButtons.forEach(function(button) {
+        button.addEventListener("click", function () {
+          modeButtons.forEach(function(btn) {
+            btn.classList.remove("selected");
+          });
+          this.classList.add("selected");
+          numSquares = this.textContent === "Easy" ? 3 : 6;
+          reset();
+        });
+      });
+    }
+
+    function setupSquares() {
+      squares.forEach(function(square) {
+        square.addEventListener("click", function () {
+          const clickedColor = this.style.backgroundColor;
+          if (clickedColor === pickedColor) {
+            messageDisplay.textContent = "Correct!";
+            changeColors(clickedColor);
+            h1.style.backgroundColor = clickedColor;
+            resetButton.textContent = "Play Again?";
+          } else {
+            this.style.backgroundColor = "#232323";
+            messageDisplay.textContent = "Try Again";
+          }
+        });
+      });
+    }
+
+    function reset() {
+      colors = generateRandomColors(numSquares);
+      pickedColor = pickColor();
+      colorDisplay.textContent = pickedColor;
+      h1.style.backgroundColor = "steelblue";
+      messageDisplay.textContent = "";
+      resetButton.textContent = "New Colors";
+
+      squares.forEach(function(square, index) {
+        if (colors[index]) {
+          square.style.display = "block";
+          square.style.backgroundColor = colors[index];
+        } else {
+          square.style.display = "none";
+        }
+      });
+    }
+
+    resetButton.addEventListener("click", reset);
+
+    function changeColors(color) {
+      squares.forEach(function(square) {
+        square.style.backgroundColor = color;
+      });
+    }
+function pickColor() {
+      const random = Math.floor(Math.random() * colors.length);
+      return colors[random];
+    }
+
+    function generateRandomColors(num) {
+      const arr = [];
+      for (let i = 0; i < num; i++) {
+        arr.push(randomColor());
+      }
+      return arr;
+    }
+
+    function randomColor() {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      return "rgb(" + r + ", " + g + ", " + b + ")";
+    }
+  </script>
+</body>
+</html>
